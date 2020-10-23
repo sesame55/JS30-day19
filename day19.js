@@ -8,26 +8,23 @@ function switchType(num) {
     type = num;
 }
 
-// 畫面
+// 原始畫面
+// 電腦版在左側，手機板在右上
+// 不一定要開，HTML可以設定display:none
 function getVideo() {
-    // navigator.mediaDevices.getUserMedia() = 要求媒體權限
+    // navigator.mediaDevices.getUserMedia() = 要求媒體權限許可
     navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })//只要相機畫面，不要輸入麥克風聲音
-        .then(localMediaStream => {
-            console.log(localMediaStream);
-
-            //  DEPRECIATION :
-            //       The following has been depreceated by major browsers as of Chrome and Firefox.
-            //       video.src = window.URL.createObjectURL(localMediaStream);
-            //       Please refer to these:
-            //       Deprecated  - https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
-            //       Newer Syntax - https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
-
+        .getUserMedia({ video: true, audio: false }) 
+                        //只要相機畫面，不要輸入麥克風聲音
+        .then(localMediaStream => {//這是自訂的變數
+            console.log(localMediaStream);//確認物件內容
             video.srcObject = localMediaStream;
-            video.play();
+            //用srcObjec屬性存放localMediaStream當作來源
+            video.play();//執行函式，取得鏡頭的畫面
         })
         .catch(err => {
             console.error(`OH NO!!!`, err);
+            // 找不到攝影機or按封鎖
         });
 }
 
