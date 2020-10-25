@@ -37,7 +37,9 @@ function paintToCanvas() {
     canvas.width = width;
     canvas.height = height;
 
-        ctx.drawImage(video, 0, 0, width, height);
+    // ctx.drawImage(video, 0, 0, width, height);
+    //這行是測試顏色用的
+    // 配合console.log(pixels.data[0], pixels.data[1], pixels.data[2], pixels.data[3]);
 
     let pixels = ctx.getImageData(0, 0, width, height);
     console.log(`Area:${width * height},Pixels:${pixels.data.length}`);
@@ -45,9 +47,13 @@ function paintToCanvas() {
     // 每個點又切換成rgba四色，範圍0-255
     // 注意console出現的兩個數字正好差4倍，因為一個點被拆解成rgba(紅,黃,藍,透明度)，4個數值
 
-    console.log(pixels.data[0], pixels.data[1], pixels.data[2], pixels.data[3]);
-    // 最左上角應該是(0,0,0,0)
-    // 
+    // console.log(pixels.data[0], pixels.data[1], pixels.data[2], pixels.data[3]);
+    // 最左上角應該是 0,0,0,0
+    //配合上方ctx.drawImage(video, 0, 0, width, height);
+    // 可能會出現 93 ,173,112 ,255 ，對應rgba
+    // 如果改成
+    // console.log(pixels.data[0 + 4], pixels.data[1 + 4], pixels.data[2 + 4], pixels.data[3 + 4]);
+    // 可能會出現 91 ,175, 115,255 ，注意255是極限，再往上加也是這個數字
 
     // 當畫面出現時觸發
     return setInterval(() => {
