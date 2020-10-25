@@ -37,11 +37,17 @@ function paintToCanvas() {
     canvas.width = width;
     canvas.height = height;
 
+        ctx.drawImage(video, 0, 0, width, height);
+
     let pixels = ctx.getImageData(0, 0, width, height);
     console.log(`Area:${width * height},Pixels:${pixels.data.length}`);
     // 例如h300*w200= area 60000，有六萬個點要處理
     // 每個點又切換成rgba四色，範圍0-255
     // 注意console出現的兩個數字正好差4倍，因為一個點被拆解成rgba(紅,黃,藍,透明度)，4個數值
+
+    console.log(pixels.data[0], pixels.data[1], pixels.data[2], pixels.data[3]);
+    // 最左上角應該是(0,0,0,0)
+    // 
 
     // 當畫面出現時觸發
     return setInterval(() => {
