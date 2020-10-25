@@ -71,6 +71,7 @@ function paintToCanvas() {
                 break;
             case 2:
                 pixels = rgbSplit(pixels);
+                // 色板分離
                 break;
             case 3:
                 pixels = greenScreen(pixels);
@@ -109,17 +110,20 @@ function redEffect(pixels) {
         //i += 4 因為rgba一組4個，一次跳4個才能到下一組
         // 以下可以註解掉其中兩個，會出現單色效果
         pixels.data[i + 0] = pixels.data[i + 0] + 200; // RED
-        // pixels.data[i + 1] = pixels.data[i + 1] - 50; // GREEN
-        // pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
+        pixels.data[i + 1] = pixels.data[i + 1] + 0; //- 50; // GREEN
+        pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
+        // +3是透明度，設定上已是最高，往上加沒效果，只能向下減
     }
     return pixels;
 }
 
+// 色板分離 - 負片效果
 function rgbSplit(pixels) {
     for (let i = 0; i < pixels.data.length; i += 4) {
+        // 使用位移
         pixels.data[i - 150] = pixels.data[i + 0]; // RED
-        pixels.data[i + 500] = pixels.data[i + 1]; // GREEN
-        pixels.data[i - 550] = pixels.data[i + 2]; // Blue
+        pixels.data[i + 1 + 500] = pixels.data[i + 1]; // GREEN
+        pixels.data[i + 2 - 550] = pixels.data[i + 2]; // Blue
     }
     return pixels;
 }
