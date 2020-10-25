@@ -107,9 +107,10 @@ function takePhoto() {
 function redEffect(pixels) {
     for (let i = 0; i < pixels.data.length; i += 4) {
         //i += 4 因為rgba一組4個，一次跳4個才能到下一組
+        // 以下可以註解掉其中兩個，會出現單色效果
         pixels.data[i + 0] = pixels.data[i + 0] + 200; // RED
-        pixels.data[i + 1] = pixels.data[i + 1] - 50; // GREEN
-        pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
+        // pixels.data[i + 1] = pixels.data[i + 1] - 50; // GREEN
+        // pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
     }
     return pixels;
 }
