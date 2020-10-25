@@ -10,17 +10,18 @@ function switchType(num) {
 
 // 原始畫面
 // 電腦版在左側，手機板在右上
-// 不一定要開，HTML可以設定display:none
+// 不一定要開，可以設定display:none
 function getVideo() {
     // navigator.mediaDevices.getUserMedia() = 要求媒體權限許可
     navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false }) 
-                        //只要相機畫面，不要輸入麥克風聲音
-        .then(localMediaStream => {//這是自訂的變數
-            console.log(localMediaStream);//確認物件內容
+        .getUserMedia({ video: true, audio: false })
+        //只要相機畫面，不要輸入麥克風聲音
+        .then(localMediaStream => {
+            //這是自訂的變數
+            console.log(localMediaStream); //確認物件內容
             video.srcObject = localMediaStream;
             //用srcObjec屬性存放localMediaStream當作來源
-            video.play();//執行函式，取得鏡頭的畫面
+            video.play(); //執行函式，取得鏡頭的畫面
         })
         .catch(err => {
             console.error(`OH NO!!!`, err);
@@ -28,24 +29,50 @@ function getVideo() {
         });
 }
 
+// 繪製右側圖像，畫在ctx
+// 拿原始video的畫面進行處理
 function paintToCanvas() {
     const width = video.videoWidth;
     const height = video.videoHeight;
     canvas.width = width;
     canvas.height = height;
 
+    let pixels = ctx.getImageData(0, 0, width, height);
+    console.log(`Area:${width * height},Pixels:${pixels.data.length}`);
+    // 例如h300*w200= area 60000，有六萬個點要處理
+    // 每個點又切換成rgba四色，範圍0-255
+    // 注意console出現的兩個數字正好差4倍，因為一個點被拆解成rgba(紅,黃,藍,透明度)，4個數值
+
+    // 當畫面出現時觸發
     return setInterval(() => {
         ctx.drawImage(video, 0, 0, width, height);
+        //ctx.drawImage(繪製位置, 繪製的起點, 繪製的高寬);
+
         // take the pixels out
         let pixels = ctx.getImageData(0, 0, width, height);
         // mess with them
+
+        switch (type) {
+            case 1:
+                pixels = redEffect(pixels);
+                // 紅色效果
+                break;
+            case 2:
+                pixels = rgbSplit(pixels);
+                break;
+            case 3:
+                pixels = greenScreen(pixels);
+                break;
+            default:
+                break;
+        }
+
         // pixels = redEffect(pixels);
-
-        pixels = rgbSplit(pixels);
+        // pixels = rgbSplit(pixels);
         // ctx.globalAlpha = 0.8;
-
         // pixels = greenScreen(pixels);
         // put them back
+        ctx.clearRect(0, 0, width, height);
         ctx.putImageData(pixels, 0, 0);
     }, 16);
 }
@@ -64,8 +91,10 @@ function takePhoto() {
     strip.insertBefore(link, strip.firstChild);
 }
 
+// 紅色效果
 function redEffect(pixels) {
     for (let i = 0; i < pixels.data.length; i += 4) {
+        //i += 4 因為rgba一組4個，一次跳4個才能到下一組
         pixels.data[i + 0] = pixels.data[i + 0] + 200; // RED
         pixels.data[i + 1] = pixels.data[i + 1] - 50; // GREEN
         pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
