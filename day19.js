@@ -75,6 +75,7 @@ function paintToCanvas() {
                 break;
             case 3:
                 pixels = greenScreen(pixels);
+                // 去背
                 break;
             default:
                 break;
@@ -90,18 +91,23 @@ function paintToCanvas() {
     }, 16);
 }
 
+// 顯示照片
 function takePhoto() {
     // played the sound
     snap.currentTime = 0;
     snap.play();
+    // 快門聲播放
 
     // take the data out of the canvas
-    const data = canvas.toDataURL('image/jpeg');
+    const data = canvas.toDataURL('image/jpeg'); //截圖功能，轉成Base64字串
     const link = document.createElement('a');
     link.href = data;
-    link.setAttribute('download', 'handsome');
+    link.setAttribute('download', 'handsome'); //下載功能
     link.innerHTML = `<img src="${data}" alt="Handsome Man" />`;
     strip.insertBefore(link, strip.firstChild);
+    // 新照片放最前面
+    // strip.insertBefore(link, null);
+    // 照片放後面
 }
 
 // 紅色效果
@@ -117,7 +123,7 @@ function redEffect(pixels) {
     return pixels;
 }
 
-// 色板分離 - 負片效果
+// 色板分離
 function rgbSplit(pixels) {
     for (let i = 0; i < pixels.data.length; i += 4) {
         // 使用位移
@@ -132,9 +138,10 @@ function rgbSplit(pixels) {
     return pixels;
 }
 
+// 去背
 function greenScreen(pixels) {
     const levels = {};
-
+    // 對應拉桿
     document.querySelectorAll('.rgb input').forEach(input => {
         levels[input.name] = input.value;
     });
@@ -146,6 +153,7 @@ function greenScreen(pixels) {
         alpha = pixels.data[i + 3];
 
         if (
+            //確認顏色是否在此範圍內
             red >= levels.rmin &&
             green >= levels.gmin &&
             blue >= levels.bmin &&
@@ -155,6 +163,7 @@ function greenScreen(pixels) {
         ) {
             // take it out!
             pixels.data[i + 3] = 0;
+            //如果顏色在範圍內，則透明度0，也就是讓顏色消失
         }
     }
 
