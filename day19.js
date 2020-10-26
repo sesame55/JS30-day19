@@ -124,8 +124,10 @@ function rgbSplit(pixels) {
         // pixels.data[i - 150] = pixels.data[i + 0]; // RED
         // pixels.data[i + 500] = pixels.data[i + 1]; // GREEN
         // pixels.data[i - 550] = pixels.data[i + 2]; // Blue
-        // 測試
-        pixels.data[i - (canvas.width / 4) * 1000] = pixels.data[i + 0]; // RED
+        // 測試 - 位移的寬度夠大就會往上移動
+        pixels.data[i - canvas.width * 4 * 50] = pixels.data[i + 0]; // RED
+        pixels.data[i + 1 - canvas.width * 4 * 30] = pixels.data[i + 1]; // GREEN
+        pixels.data[i + 2 - canvas.width * 4 * 10] = pixels.data[i + 2]; // Blue
     }
     return pixels;
 }
